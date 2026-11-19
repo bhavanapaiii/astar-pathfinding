@@ -38,8 +38,8 @@ from road_network import (
     get_or_build_road_network,
 )
 
-PORT = 5000
-HOST = "127.0.0.1"
+PORT = int(os.environ.get("PORT", 5000))
+HOST = os.environ.get("HOST", "0.0.0.0")
 
 # Geocoding Rate-Limiting & In-Memory Cache to respect OpenStreetMap Nominatim policy
 LAST_NOMINATIM_CALL: float = 0.0
@@ -2155,12 +2155,16 @@ class AStarRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response_data).encode("utf-8"))
 
 
-def start_server(host: str = HOST, port: int = PORT) -> None:
+def start_server(host: Optional[str] = None, port: Optional[int] = None) -> None:
+    if host is None:
+        host = os.environ.get("HOST", HOST)
+    if port is None:
+        port = int(os.environ.get("PORT", PORT))
     server = ThreadingHTTPServer((host, port), AStarRequestHandler)
     print(f"==================================================")
     print(f" Google Maps A* Navigation Web App is Live!")
     print(f" OpenStreetMap Tiles + Nominatim Real Place Search")
-    print(f" Open your browser at: http://{host}:{port}")
+    print(f" Listening on: http://{host}:{port}")
     print(f" Press Ctrl+C to stop the server.")
     print(f"==================================================")
     try:

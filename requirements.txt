@@ -1,0 +1,3 @@
+# A* Pathfinding Web Application
+# Built using Python's standard library (http.server, urllib, json, math, heapq)
+# No external third-party dependencies required.
